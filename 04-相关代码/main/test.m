@@ -1,32 +1,32 @@
 clear;
-csi_trace = read_bf_file('data/Test1/64_HT20_test1.dat');
+csi_trace = read_bf_file('data/Test1/64_HT20_test1.dat'); % 读取CSI文件
 % --------------------------------------------------------------------------------------------
 % 变量定义
-fc = 5.63e9; 
-M = 3;    
-fs = 40e6; 
-c = 3e8;  
-d = 2.6e-2;  
+fc = 5.63e9; % 中心频率
+M = 3;    % rx天线数量
+fs = 40e6; % 信道带宽
+c = 3e8;  %  光速
+d = 2.6e-2;  % 线性天线阵中相邻天线之间的距离
 
-SubCarrInd = [-58,-54,-50,-46,-42,-38,-34,-30,-26,-22,-18,-14,-10,-6,-2,2,6,10,14,18,22,26,30,34,38,42,46,50,54,58]; %WiFi瀛愯浇娉㈢储寮曪紝鍏朵腑CSI鏄彲鐢ㄧ殑
-N = length(SubCarrInd); % 瀛愯浇娉㈢殑鏁伴噺 30
-fgap = 312.5e3; % WiFi涓繛缁瓙杞芥尝涔嬮棿鐨勯鐜囬棿闅?(Hz)
-lambda = c/fc;  % 娉㈤暱=鍏夐??/棰戠巼
-T = 1; % 鍙戝皠澶╃嚎鐨勬暟閲?
+SubCarrInd = [-58,-54,-50,-46,-42,-38,-34,-30,-26,-22,-18,-14,-10,-6,-2,2,6,10,14,18,22,26,30,34,38,42,46,50,54,58]; % WiFi子载波索引，其中CSI是可用的
+N = length(SubCarrInd); % 子载波数
+fgap = 312.5e3; % WiFi中连续子载波之间的频率间隔(Hz)
+lambda = c/fc;  % 波长
+T = 1; % 发射天线数量
 
-paramRange = struct; % 瀹氫箟paramRange缁撴瀯浣?
-paramRange.GridPts = [101 101 1]; % 鏍煎紡涓篬ToF锛孉oA锛? 1]
-paramRange.delayRange = [-50 50]*1e-9; % 瑕佽?冭檻鐨凾oF缃戞牸鐨勬渶澶у?煎拰鏈?灏忓?笺?俒-25ns,25ns]
-paramRange.angleRange = 90*[-1 1]; % 瑕佽?冭檻鐨凙oA缃戞牸鐨勬渶澶у?煎拰鏈?灏忓?笺?俒-90,90]
-do_second_iter = 0; % 绗簩閫氳矾锛?
-paramRange.K = floor(M/2)+1; % 涓庡钩婊戠浉鍏崇殑鍙傛暟銆? 
-paramRange.L = floor(N/2); % 涓庡钩婊戠浉鍏崇殑鍙傛暟銆? 
-paramRange.T = 1; % ?
-paramRange.deltaRange = [0 0];  %鍙橀噺绋?
+paramRange = struct; % 创建一个结构体
+paramRange.GridPts = [101 101 1]; % 格式为[ToF格点数(飞行时间)，到达角格点数(AoA)， 1]
+paramRange.delayRange = [-50 50]*1e-9; % 要考虑的ToF网格的最大值和最小值。
+paramRange.angleRange = 90*[-1 1]; % 为AoA网格考虑的最小值和值。
+do_second_iter = 0; 
+paramRange.K = floor(M/2)+1; % 与平滑相关的参数。
+paramRange.L = floor(N/2); % 与平滑相关的参数。
+paramRange.T = 1; 
+paramRange.deltaRange = [0 0];  
 
-maxRapIters = Inf; % inf涓烘棤绌峰ぇ鐨勬剰鎬?
+maxRapIters = Inf;
 useNoise = 0;
-paramRange.generateAtot = 2;% 鐢熸垚Atot 锛?
+paramRange.generateAtot = 2;
 AoA = [];%存放aoa值的数组
 % --------------------------------------------------------------------------------------------
 % 循环处理csi数据
